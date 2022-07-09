@@ -9,23 +9,37 @@ export namespace Classification {
      */
     pageSize?: string;
   }
-  export interface RootType {
-    code: number;
-    msg: string;
+  interface ListResponse extends Response {
     data: Data;
-    traceId: string;
   }
 
-  export interface Data {
+  interface Data {
     pageSize: number;
     total: number;
     list: Item[];
   }
 
-  export interface Item {
+  interface Item {
     id: number;
     name: string;
     createAt: number;
     updateAt: number;
+  }
+
+  interface CreateResponse {
+    name: string;
+  }
+
+  interface CreateResponse extends Response {
+    data: null;
+  }
+
+  interface UpdateRequest {
+    id: number;
+    name: string;
+  }
+
+  interface UpdateResponse extends Response {
+    data: null;
   }
 }

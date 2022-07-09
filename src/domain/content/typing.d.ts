@@ -1,4 +1,7 @@
 export namespace Content {
+  /**
+   * 内容列表请求参数
+   */
   interface ListRequest {
     /**
      * 内容标题，支持模糊查询复制
@@ -14,6 +17,9 @@ export namespace Content {
     pageSize?: string;
   }
 
+  interface ListResponse extends Response {
+    data: ListData;
+  }
   interface ListData {
     contents: Content[];
   }
@@ -38,7 +44,33 @@ export namespace Content {
     labelName: string;
   }
 
-  interface ListResponseData extends ListResponse {
-    data: ListData;
+  interface CreateRequest {
+    title: string;
+    cover: string;
+    introduction: string;
+    content: string;
+    categoryId: number;
+    labelIds: number[];
+    score: number;
+    cast: string[];
+  }
+
+  interface CreateResponse extends Response {
+    data: null;
+  }
+
+  interface UpdateRequest {
+    id: number;
+    title: string;
+    cover: string;
+    introduction: string;
+    categoryId: number;
+    labelIds: number[];
+    score: number;
+    cast: string[];
+  }
+
+  interface UpdateResponse extends Response {
+    data: null;
   }
 }
