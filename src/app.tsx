@@ -1,8 +1,9 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
+import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
+import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 
@@ -42,7 +43,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
@@ -59,10 +60,39 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    childrenRender: (children, props) => {
+    childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return <>{children}</>;
     },
     ...initialState?.settings,
   };
+};
+
+const errorHandler = (error: any) => {
+  console.debug('error : ', error);
+  if ( error.response.status !== 200 ) {
+    message.error(`服务器出错`);
+    return Promise.reject(error);
+  }
+  message.error(error.data.message);
+  throw error.data;
+};
+
+export const request: RequestConfig = {
+  errorConfig: {
+    errorHandler,
+    errorThrower() {},
+  },
+  requestInterceptors: [
+    [
+      (config) => {
+        return { ...config, baseURL: '/go-up' };
+      },
+      (error: Error) => {
+        return Promise.reject(error);
+      },
+    ],
+  ],
+  // prefix: "/api/v1",
+  timeout: 60000,
 };
