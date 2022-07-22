@@ -1,4 +1,4 @@
-export namespace TagSort {
+export namespace TagCategory {
   interface ListRequest {
     /**
      * 页码，起始页码为1
